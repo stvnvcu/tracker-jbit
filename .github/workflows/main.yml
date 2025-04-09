@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  id-token: write 
+  id-token: write
 
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build, tag, and push to AWS ECR
         env:
-          REGISTRY: ${{steps.login-ecr-public.outputs.registry}}
+          REGISTRY: ${{steps.login-ecr.outputs.registry}}
           REPOSITORY: tracker
           IMAGE_TAG: ${{github.sha}}
         run: | 
