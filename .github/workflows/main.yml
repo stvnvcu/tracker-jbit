@@ -54,4 +54,36 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:${{ github.sha }}
           docker push $REGISTRY/$REPOSITORY:latest
 
+    deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      permissions:
+        id-token: write
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            role-to-assume: arn:aws:iam::160382898307:role/github.ecr.oicd
+            aws-region: eu-central-1
+
+        - name: Update kubeconfig for EKS
+          run: aws eks update-kubeconfig --name tracker-eks --region eu-central-1
+
+        - name: Apply Kubernetes manifests
+            run: |
+              kubectl apply -f k8s/tracker.yaml
+
+        - name: Roll out new image
+            env:
+                REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+                REPOSITORY: tracker
+                IMAGE_TAG: ${{ github.sha }}
+            run: |
+                  kubectl set image -n tracker deployment/tracker tracker=$REGISTRY/$REPOSITORY:${IMAGE_TAG}
+                  kubectl rollout status -n tracker deployment/tracker --timeout=120s
+
           
