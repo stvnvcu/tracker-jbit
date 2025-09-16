@@ -48,7 +48,10 @@ jobs:
           REGISTRY: ${{steps.ecr-login.outputs.registry}}
           REPOSITORY: tracker
           IMAGE_TAG: ${{github.sha}}
-        run: | 
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:${{ github.sha }} \
+             -t $REGISTRY/$REPOSITORY:latest .
+          docker push $REGISTRY/$REPOSITORY:${{ github.sha }}
+          docker push $REGISTRY/$REPOSITORY:latest
+
           
