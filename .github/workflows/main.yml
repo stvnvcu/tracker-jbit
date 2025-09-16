@@ -74,7 +74,7 @@ jobs:
 
       - name: Apply Kubernetes manifests
         run: |
-          kubectl apply -f k8s/tracker.yaml
+          kubectl apply -f k8/tracker.yaml
 
       - name: Roll out new image
         env:
