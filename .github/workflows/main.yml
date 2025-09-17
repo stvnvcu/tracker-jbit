@@ -63,15 +63,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Log in to AWS ecr
-        id: ecr-login
-        uses: aws-actions/amazon-ecr-login@v2
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::160382898307:role/github.ecr.oicd
           aws-region: eu-central-1
+
+
+      - name: Log in to AWS ecr
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Update kubeconfig for EKS
         run: aws eks update-kubeconfig --name tracker-eks --region eu-central-1
