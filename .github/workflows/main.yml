@@ -63,6 +63,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Log in to AWS ecr
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -84,3 +88,4 @@ jobs:
         run: |
           kubectl set image -n tracker deployment/tracker tracker=$REGISTRY/$REPOSITORY:${IMAGE_TAG}
           kubectl rollout status -n tracker deployment/tracker --timeout=120s
+
