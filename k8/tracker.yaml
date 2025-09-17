@@ -24,6 +24,13 @@ spec:
           image: 160382898307.dkr.ecr.eu-central-1.amazonaws.com/tracker:latest
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              cpu: "250"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
           readinessProbe:
             httpGet:
               path: /
@@ -50,3 +57,30 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: tracker
+  namespace: tracker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tracker
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
