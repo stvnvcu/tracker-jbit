@@ -16,7 +16,6 @@ public class TrackerController {
         this.trackerService = trackerService;
     }
 
-
     @GetMapping("/announce")
     public String announce(@ModelAttribute AnnounceRequest request){
         LOG.info("Announcing for request {}",request.getInfoHash());
