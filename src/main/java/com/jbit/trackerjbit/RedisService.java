@@ -3,6 +3,8 @@ package com.jbit.trackerjbit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 @Service
 public class RedisService {
 
@@ -17,7 +19,7 @@ public class RedisService {
             template.opsForValue().set(announceRequest.getInfoHash(), announceRequest.getPeerId());
             return announceRequest.getInfoHash();
         }catch (Exception e){
-            return e.getMessage();
+            return Arrays.toString(e.getStackTrace());
         }
     }
 
