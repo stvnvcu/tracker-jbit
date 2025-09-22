@@ -17,7 +17,7 @@ public class RedisService {
             template.opsForValue().set(announceRequest.getInfoHash(), announceRequest.getPeerId());
             return announceRequest.getInfoHash();
         }catch (Exception e){
-            return "error";
+            return e.getMessage();
         }
     }
 
